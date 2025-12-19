@@ -10,12 +10,12 @@
         .container { background: white; width: 100%; max-width: 450px; padding: 25px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         h1 { color: var(--main-blue); font-size: 1.4rem; text-align: center; margin-bottom: 25px; border-bottom: 2px solid var(--main-blue); padding-bottom: 10px; }
         
-        /* 年齢選択エリア：数字を大きくブルーに */
+        /* 年齢選択エリア */
         .age-control-box { background: #f8fafc; padding: 25px 15px; border-radius: 20px; text-align: center; border: 1px solid #e2e8f0; margin-bottom: 20px; }
         .age-num-display { 
-            font-size: 5rem; /* さらに大きく */
+            font-size: 5rem; 
             font-weight: 900; 
-            color: var(--main-blue); /* 濃いブルー */
+            color: var(--main-blue); 
             line-height: 1;
             margin-bottom: 5px;
             text-shadow: 2px 2px 0px rgba(0, 51, 102, 0.1);
@@ -46,6 +46,9 @@
         .good { background: var(--good-green); color: #166534; }
         .item-name { font-size: 0.7rem; display: block; margin-bottom: 4px; font-weight: bold; }
         .item-val { font-size: 1.1rem; font-weight: 900; }
+
+        /* 復活させたヒント・コメント */
+        .hint { margin-top: 25px; font-size: 0.9rem; line-height: 1.6; color: #475569; background: #fffde7; padding: 18px; border-radius: 15px; border-left: 6px solid #fbbf24; text-align: left; }
 
         .nav-links { margin-top: 35px; padding-top: 20px; border-top: 2px dashed #cbd5e1; display: flex; flex-direction: column; gap: 12px; }
         .nav-btn { text-align: center; text-decoration: none; padding: 16px; border-radius: 40px; font-weight: bold; font-size: 1rem; transition: 0.2s; }
@@ -101,6 +104,11 @@
                     <td><div class="val-box good"><span class="item-name">高齢化率</span><span class="item-val">30％</span></div></td>
                 </tr>
             </table>
+        </div>
+
+        <div class="hint">
+            <strong>💡 未来を変える鍵</strong><br>
+            今の「年間12人の若者定住」という挑戦が、40年後に人口1,000人近い差を生みます。今の積み重ねが、大きな差になります！
         </div>
     </div>
 
