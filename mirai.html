@@ -8,18 +8,28 @@
         body { font-family: sans-serif; background-color: #f0f4f8; margin: 0; padding: 20px; color: #333; display: flex; justify-content: center; }
         .container { background: white; width: 100%; max-width: 500px; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         h1 { color: #003366; text-align: center; font-size: 1.4rem; border-bottom: 2px solid #003366; padding-bottom: 10px; }
+        
         .input-box { text-align: center; background: #f8fafc; padding: 20px; border-radius: 15px; margin-bottom: 25px; }
-        input { padding: 10px; font-size: 1.2rem; width: 80px; text-align: center; border: 2px solid #ddd; border-radius: 10px; margin-bottom: 10px; }
+        input { padding: 10px; font-size: 1.2rem; width: 80px; text-align: center; border: 2px solid #ddd; border-radius: 10px; margin-bottom: 15px; }
         button { width: 100%; padding: 15px; background: #003366; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
         
-        .result-title { margin-top: 30px; font-weight: bold; color: #003366; text-align: center; display: none; }
-        .card-container { display: none; margin-top: 15px; }
-        .card { background: #eff6ff; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 5px solid #003366; }
-        .card h3 { margin: 0; font-size: 0.9rem; color: #666; }
+        .result-area { display: none; margin-top: 30px; }
+        .my-age-card { background: #333; color: white; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 20px; }
+        
+        .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .compare-header { font-weight: bold; font-size: 0.85rem; text-align: center; margin-bottom: 5px; }
+        
+        .card { padding: 15px; border-radius: 12px; margin-bottom: 10px; text-align: center; }
+        .bad { background: #ffebee; border: 1px solid #ffcdd2; color: #b71c1c; }
+        .good { background: #e8f5e9; border: 1px solid #c8e6c9; color: #1b5e20; }
+        
+        .card h3 { margin: 0; font-size: 0.75rem; opacity: 0.8; }
         .card p { margin: 5px 0 0; font-size: 1.1rem; font-weight: bold; }
+        
+        .message { margin-top: 20px; padding: 15px; background: #fffde7; border-radius: 10px; font-size: 0.9rem; line-height: 1.6; border: 1px solid #fff59d; }
 
         .nav-links { margin-top: 40px; padding-top: 20px; border-top: 1px dashed #ccc; display: flex; flex-direction: column; gap: 10px; }
-        .nav-btn { text-align: center; text-decoration: none; padding: 12px; border-radius: 30px; font-weight: bold; font-size: 0.9rem; }
+        .nav-btn { text-align: center; text-decoration: none; padding: 12px; border-radius: 30px; font-weight: bold; font-size: 0.85rem; }
         .quiz-btn { background: #e8f5e9; color: #2e7d32; border: 1px solid #2e7d32; }
         .kagura-btn { background: #fdf2f2; color: #8b0000; border: 1px solid #8b0000; }
     </style>
@@ -35,19 +45,37 @@
         <button onclick="simulate()">未来を予測する</button>
     </div>
 
-    <div id="res-title" class="result-title">＼ 20年後の2045年 ／</div>
-    <div id="res-cards" class="card-container">
-        <div class="card">
-            <h3>あなたは</h3>
-            <p id="my-age">-- 歳になります</p>
+    <div id="result" class="result-area">
+        <div class="my-age-card">
+            2045年、あなたは <span id="future-age">--</span> 歳
         </div>
-        <div class="card">
-            <h3>八千代地区の人口は</h3>
-            <p>約 2,400 人（33％減少）</p>
+
+        <div class="compare-grid">
+            <div class="compare-header">【現状のまま】</div>
+            <div class="compare-header">【対策したら】</div>
+            
+            <div class="card bad">
+                <h3>人口</h3>
+                <p>2,400人</p>
+            </div>
+            <div class="card good">
+                <h3>人口</h3>
+                <p>3,000人</p>
+            </div>
+            
+            <div class="card bad">
+                <h3>高齢化率</h3>
+                <p>48％</p>
+            </div>
+            <div class="card good">
+                <h3>高齢化率</h3>
+                <p>35％</p>
+            </div>
         </div>
-        <div class="card">
-            <h3>高齢化率は</h3>
-            <p>約 48 ％（2人に1人）</p>
+
+        <div class="message">
+            <strong>💡 未来を変えるヒント</strong><br>
+            毎年12人の20代が定住すれば、この「対策したら」の未来に近づけます。みんなで八千代の魅力を発信しましょう！
         </div>
     </div>
 
@@ -62,11 +90,8 @@
         const age = parseInt(document.getElementById('age').value);
         if (isNaN(age)) return;
         
-        document.getElementById('res-title').style.display = 'block';
-        document.getElementById('res-cards').style.display = 'block';
-        
-        // 2045年（今から約20年後）の年齢を表示
-        document.getElementById('my-age').innerText = (age + 20) + " 歳になります";
+        document.getElementById('result').style.display = 'block';
+        document.getElementById('future-age').innerText = (age + 20);
         
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
