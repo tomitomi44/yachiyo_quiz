@@ -6,7 +6,7 @@
     <title>八千代町 未来シミュレーター</title>
     <style>
         body { font-family: sans-serif; background-color: #f0f4f8; margin: 0; padding: 20px; color: #333; display: flex; justify-content: center; }
-        .container { background: white; width: 100%; max-width: 500px; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .container { background: white; width: 100%; max-width: 550px; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         h1 { color: #003366; text-align: center; font-size: 1.4rem; border-bottom: 2px solid #003366; padding-bottom: 10px; }
         
         .input-box { text-align: center; background: #f8fafc; padding: 20px; border-radius: 15px; margin-bottom: 25px; }
@@ -14,21 +14,24 @@
         button { width: 100%; padding: 15px; background: #003366; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
         
         .result-area { display: none; margin-top: 30px; }
-        .my-age-card { background: #333; color: white; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 20px; }
+        .age-display { display: flex; gap: 10px; margin-bottom: 20px; }
+        .age-card { flex: 1; background: #333; color: white; padding: 10px; border-radius: 10px; text-align: center; font-size: 0.9rem; }
+        .age-card span { display: block; font-size: 1.2rem; font-weight: bold; }
         
-        .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .compare-header { font-weight: bold; font-size: 0.85rem; text-align: center; margin-bottom: 5px; }
+        .section-title { font-weight: bold; color: #003366; margin: 20px 0 10px; text-align: center; border-left: 5px solid #003366; background: #eef6ff; padding: 5px; }
         
-        .card { padding: 15px; border-radius: 12px; margin-bottom: 10px; text-align: center; }
+        .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .compare-header { font-weight: bold; font-size: 0.8rem; text-align: center; color: #666; }
+        
+        .card { padding: 12px; border-radius: 10px; text-align: center; }
         .bad { background: #ffebee; border: 1px solid #ffcdd2; color: #b71c1c; }
         .good { background: #e8f5e9; border: 1px solid #c8e6c9; color: #1b5e20; }
         
-        .card h3 { margin: 0; font-size: 0.75rem; opacity: 0.8; }
-        .card p { margin: 5px 0 0; font-size: 1.1rem; font-weight: bold; }
+        .card h3 { margin: 0; font-size: 0.7rem; opacity: 0.8; }
+        .card p { margin: 3px 0 0; font-size: 1rem; font-weight: bold; }
         
-        .message { margin-top: 20px; padding: 15px; background: #fffde7; border-radius: 10px; font-size: 0.9rem; line-height: 1.6; border: 1px solid #fff59d; }
-
-        .nav-links { margin-top: 40px; padding-top: 20px; border-top: 1px dashed #ccc; display: flex; flex-direction: column; gap: 10px; }
+        .message { margin-top: 25px; padding: 15px; background: #fffde7; border-radius: 10px; font-size: 0.85rem; line-height: 1.6; border: 1px solid #fff59d; }
+        .nav-links { margin-top: 30px; padding-top: 20px; border-top: 1px dashed #ccc; display: flex; flex-direction: column; gap: 10px; }
         .nav-btn { text-align: center; text-decoration: none; padding: 12px; border-radius: 30px; font-weight: bold; font-size: 0.85rem; }
         .quiz-btn { background: #e8f5e9; color: #2e7d32; border: 1px solid #2e7d32; }
         .kagura-btn { background: #fdf2f2; color: #8b0000; border: 1px solid #8b0000; }
@@ -46,36 +49,32 @@
     </div>
 
     <div id="result" class="result-area">
-        <div class="my-age-card">
-            2045年、あなたは <span id="future-age">--</span> 歳
+        <div class="age-display">
+            <div class="age-card">2045年(20年後) <span id="age-20">--歳</span></div>
+            <div class="age-card">2065年(40年後) <span id="age-40">--歳</span></div>
         </div>
 
+        <div class="section-title">20年後 (2045年)</div>
         <div class="compare-grid">
-            <div class="compare-header">【現状のまま】</div>
-            <div class="compare-header">【対策したら】</div>
-            
-            <div class="card bad">
-                <h3>人口</h3>
-                <p>2,400人</p>
-            </div>
-            <div class="card good">
-                <h3>人口</h3>
-                <p>3,000人</p>
-            </div>
-            
-            <div class="card bad">
-                <h3>高齢化率</h3>
-                <p>48％</p>
-            </div>
-            <div class="card good">
-                <h3>高齢化率</h3>
-                <p>35％</p>
-            </div>
+            <div class="compare-header">【現状のまま】</div><div class="compare-header">【対策したら】</div>
+            <div class="card bad"><h3>人口</h3><p>2,400人</p></div>
+            <div class="card good"><h3>人口</h3><p>3,000人</p></div>
+            <div class="card bad"><h3>高齢化率</h3><p>48％</p></div>
+            <div class="card good"><h3>高齢化率</h3><p>35％</p></div>
+        </div>
+
+        <div class="section-title">40年後 (2065年)</div>
+        <div class="compare-grid">
+            <div class="compare-header">【現状のまま】</div><div class="compare-header">【対策したら】</div>
+            <div class="card bad"><h3>人口</h3><p>1,600人</p></div>
+            <div class="card good"><h3>人口</h3><p>2,500人</p></div>
+            <div class="card bad"><h3>高齢化率</h3><p>55％</p></div>
+            <div class="card good"><h3>高齢化率</h3><p>30％</p></div>
         </div>
 
         <div class="message">
-            <strong>💡 未来を変えるヒント</strong><br>
-            毎年12人の20代が定住すれば、この「対策したら」の未来に近づけます。みんなで八千代の魅力を発信しましょう！
+            <strong>💡 未来を変える鍵</strong><br>
+            40年後の未来、あなたの子供や孫の世代が暮らす八千代町。今からの「年間12人の若者定住」という小さな積み重ねが、人口1,000人近い差を生みます。
         </div>
     </div>
 
@@ -89,13 +88,11 @@
     function simulate() {
         const age = parseInt(document.getElementById('age').value);
         if (isNaN(age)) return;
-        
         document.getElementById('result').style.display = 'block';
-        document.getElementById('future-age').innerText = (age + 20);
-        
+        document.getElementById('age-20').innerText = (age + 20) + "歳";
+        document.getElementById('age-40').innerText = (age + 40) + "歳";
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
 </script>
-
 </body>
 </html>
