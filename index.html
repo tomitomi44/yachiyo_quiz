@@ -8,7 +8,7 @@
     <style>
         :root { --primary-color: #2e7d32; --accent-color: #e91e63; --bg-color: #f1f8e9; }
         body { font-family: sans-serif; background-color: var(--bg-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
-        .container { background: white; width: 100%; max-width: 500px; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 3px solid var(--primary-color); }
+        .container { background: white; width: 100%; max-width: 500px; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 3px solid var(--primary-color); position: relative; }
         h1 { color: var(--primary-color); font-size: 1.4rem; text-align: center; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; margin-top: 0; }
         .stats { font-size: 0.9rem; text-align: right; color: #666; margin-bottom: 10px; }
         .question-text { font-size: 1.1rem; font-weight: bold; line-height: 1.6; margin-bottom: 20px; color: #333; }
@@ -20,6 +20,11 @@
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
         #feedback { margin-top: 20px; padding: 15px; border-radius: 10px; display: none; text-align: center; font-weight: bold; border: 1px solid #ccc; background: #fafafa; }
         .next-btn { display: none; width: 100%; margin-top: 20px; padding: 15px; background: var(--primary-color); color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
+        
+        /* 豆知識ボックスのスタイル */
+        .mame-box { background: #fff3e0; border-left: 5px solid #ff9800; padding: 15px; margin: 20px 0; border-radius: 8px; font-size: 0.9rem; line-height: 1.5; color: #5d4037; }
+        .mame-title { font-weight: bold; color: #ef6c00; display: block; margin-bottom: 5px; }
+
         .sim-link-box { margin-top: 40px; padding-top: 20px; border-top: 2px dashed #ccc; text-align: center; }
         .sim-btn { display: inline-block; background: #1a237e; color: white; padding: 12px 25px; border-radius: 30px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         .shogo { font-size: 2rem; margin: 10px 0; display: block; }
@@ -30,11 +35,19 @@
 <div class="container">
     <div id="quiz-ui">
         <h1>八千代町 未来へのクイズ</h1>
-        <div class="stats" id="progress">第 1 問 / 8 問</div>
-        <div id="q-text" class="question-text"></div>
-        <div id="options" class="options"></div>
-        <div id="feedback"></div>
-        <button id="next-btn" class="next-btn" onclick="nextQuestion()">次の問題へ ▶</button>
+        
+        <div id="mame-chishiki" class="mame-box">
+            <span class="mame-title">💡 八千代の豆知識</span>
+            <span id="mame-text">読み込み中...</span>
+        </div>
+
+        <div id="quiz-content">
+            <div class="stats" id="progress">第 1 問 / 8 問</div>
+            <div id="q-text" class="question-text"></div>
+            <div id="options" class="options"></div>
+            <div id="feedback"></div>
+            <button id="next-btn" class="next-btn" onclick="nextQuestion()">次の問題へ ▶</button>
+        </div>
     </div>
 
     <div class="sim-link-box">
@@ -55,9 +68,24 @@
         { q: "安芸高田市が掲げる基本理念は？", a: ["若者移住最大化", "子どもたちの未来を守る", "デジタル世界一"], c: 1, i: "未来の子どもたちのために！" }
     ];
 
+    const mameData = [
+        "八千代町の「のどごえ公園」の名前の由来は、近くにある「喉越（のどごえ）橋」からきているんだよ。",
+        "八千代湖は、西日本でも有数の「はじライディング（ボート競技）」の聖地として有名なんだって。",
+        "八千代産直市場の「かけそば」は、地元の人にも大人気の隠れた名物なんだよ。",
+        "土師ダムは、実は治水だけでなく、広島市などの水不足を救う大事な役割を持っているんだ。",
+        "八千代町の神楽は、地域ごとに伝統が受け継がれていて、秋祭りの時期は町中がにぎわうよ。",
+        "安芸高田市の中でも、八千代町は特に梨の栽培が盛んで、甘くてみずみずしいのが特徴だよ。"
+    ];
+
     let currentQ = 0; let score = 0;
 
+    function displayMame() {
+        const randomIndex = Math.floor(Math.random() * mameData.length);
+        document.getElementById('mame-text').innerText = mameData[randomIndex];
+    }
+
     function initQuiz() {
+        displayMame(); // 豆知識を更新
         const q = quizData[currentQ];
         document.getElementById('progress').innerText = `第 ${currentQ + 1} 問 / 8 問`;
         document.getElementById('q-text').innerText = q.q;
@@ -89,7 +117,8 @@
     }
 
     function showResult() {
-        const ui = document.getElementById('quiz-ui');
+        displayMame(); // 最後にもう一度豆知識を更新
+        const ui = document.getElementById('quiz-content');
         let title, comment, shogo, emoji;
         if (score <= 3) { title = "修行してきてください！"; comment = "八千代愛が足りないようです…。<br>土師ダムの桜を100回見て出直してきてください！"; shogo = "八千代ビギナー"; emoji = "🐍"; }
         else if (score <= 6) { title = "なかなかの八千代通！"; comment = "よくわかってますね！<br>産直市場の常連さんレベルです！"; shogo = "八千代の賢者"; emoji = "🌸"; }
