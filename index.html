@@ -18,13 +18,17 @@
         button.correct { background-color: #c8e6c9 !important; border-color: #4caf50; animation: bounce 0.5s; }
         button.wrong { background-color: #ffcdd2 !important; border-color: #f44336; }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        #feedback { margin-top: 20px; padding: 15px; border-radius: 10px; display: none; text-align: center; font-weight: bold; font-size: 1.2rem; }
+        
+        /* コメントエリアのデザイン */
+        #feedback { margin-top: 20px; padding: 15px; border-radius: 12px; display: none; text-align: left; line-height: 1.5; }
+        .feedback-title { font-size: 1.3rem; font-weight: bold; margin-bottom: 5px; display: block; text-align: center; }
+        .feedback-comment { font-size: 0.95rem; color: #444; }
+
         .next-btn { display: none; width: 100%; margin-top: 20px; padding: 15px; background: var(--primary-color); color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
         .nav-section { margin-top: 30px; padding-top: 20px; border-top: 2px dashed #ccc; text-align: center; display: flex; flex-direction: column; gap: 10px; }
-        .nav-btn { display: block; padding: 12px; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 0.9rem; transition: 0.3s; }
+        .nav-btn { display: block; padding: 12px; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 0.9rem; }
         .sim-link { background: #003366; color: white; }
         .kagura-link { background: #8b0000; color: #d4af37; border: 1px solid #d4af37; }
-        .shogo { font-size: 2rem; margin: 10px 0; display: block; }
     </style>
 </head>
 <body>
@@ -44,16 +48,66 @@
 </div>
 <script>
     const quizData = [
-        { q: "土師ダム周辺の桜はおよそ何本？", a: ["約3,000本", "約6,000本", "約12,000本"], c: 1 },
-        { q: "CHEMISTRYのメンバーで八千代町出身なのは？", a: ["堂珍 嘉邦", "川畑 要", "田丸 美寿々"], c: 0 },
-        { q: "ダム湖百選に選ばれた湖の名前は？", a: ["高田湖", "八千代湖", "のどごえ湖"], c: 1 },
-        { q: "2100年の予測。八千代地区の人口は最悪何人まで減る？", a: ["約1,500人", "約2,000人", "約880人"], c: 2 },
-        { q: "2045年の予測高齢化率は？", a: ["約35％", "約48％", "約60％"], c: 1 },
-        { q: "2045年の目標達成に、毎年必要な20代の若者定住数は？", a: ["12名", "30名", "50名"], c: 0 },
-        { q: "2019年に入込観光客が51％増えた施設は？", a: ["美術館", "サイクリングターミナル", "八千代産直市場"], c: 2 },
-        { q: "安芸高田市が掲げる基本理念は？", a: ["若者移住最大化", "子どもたちの未来を守る", "デジタル世界一"], c: 1 }
+        { 
+            q: "土師ダム周辺の桜はおよそ何本？", 
+            a: ["約3,000本", "約6,000本", "約12,000本"], 
+            c: 1,
+            ok: "さすが！春の土師ダムは圧巻ですよね。夜桜も最高！",
+            no: "惜しい！実は約6,000本。まさに桜の海ですね。"
+        },
+        { 
+            q: "CHEMISTRYのメンバーで八千代町出身なのは？", 
+            a: ["堂珍 嘉邦", "川畑 要", "田丸 美寿々"], 
+            c: 0,
+            ok: "大正解！八千代町の誇る歌声。のどごえ湖も彼にちなんでます！",
+            no: "おっと！正解は堂珍さん。あの美声は八千代の空気で育ちました。"
+        },
+        { 
+            q: "ダム湖百選に選ばれた湖の名前は？", 
+            a: ["高田湖", "八千代湖", "のどごえ湖"], 
+            c: 1,
+            ok: "正解！釣りにサイクリング、八千代の遊び場といえばここ！",
+            no: "ありゃ！正解は八千代湖。「のどごえ湖」は愛称なんです。"
+        },
+        { 
+            q: "2100年の予測。八千代地区の人口は最悪何人まで減る？", 
+            a: ["約1,500人", "約2,000人", "約880人"], 
+            c: 2,
+            ok: "その通り。880人…これはみんなでなんとかしないといけん数字！",
+            no: "実は880人。このままじゃ八千代お囃子が聞こえなくなるかも！？"
+        },
+        { 
+            q: "2045年の予測高齢化率は？", 
+            a: ["約35％", "約48％", "約60％"], 
+            c: 1,
+            ok: "正解！2人に1人が高齢者。おじいちゃんおばあちゃんを支えんと！",
+            no: "残念、約48％。もはや町中が大家族みたいな比率です。"
+        },
+        { 
+            q: "2045年の目標達成に、毎年必要な20代の若者定住数は？", 
+            a: ["12名", "30名", "50名"], 
+            c: 0,
+            ok: "ビンゴ！たった12人、されど12人。あなたもその一人かも？",
+            no: "正解は12名。野球チーム1つ分＋控え3人。意外といけそう？"
+        },
+        { 
+            q: "2019年に入込観光客が51％増えた施設は？", 
+            a: ["美術館", "サイクリングターミナル", "八千代産直市場"], 
+            c: 2,
+            ok: "正解！あそこの産直野菜は最高に美味いけぇね！",
+            no: "正解は産直市場。みんな美味しいものには目がないんです！"
+        },
+        { 
+            q: "安芸高田市が掲げる基本理念は？", 
+            a: ["若者移住最大化", "子どもたちの未来を守る", "デジタル世界一"], 
+            c: 1,
+            ok: "完璧！すべては未来の子供たちのために。熱いですね！",
+            no: "正解は「子どもたちの未来を守る」。これが八千代の魂です。"
+        }
     ];
+
     let currentQ = 0; let score = 0;
+
     function initQuiz() {
         const q = quizData[currentQ];
         document.getElementById('progress').innerText = `第 ${currentQ + 1} 問 / 8 問`;
@@ -65,30 +119,38 @@
         document.getElementById('feedback').style.display = 'none';
         document.getElementById('next-btn').style.display = 'none';
     }
+
     function select(idx) {
         const q = quizData[currentQ]; const btns = document.querySelectorAll('.options button');
         const f = document.getElementById('feedback');
         btns.forEach(b => b.disabled = true);
+        
         if (idx === q.c) {
-            btns[idx].classList.add('correct'); f.innerHTML = "⭕ 正解！"; f.style.color = "#2e7d32"; score++;
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#ffc0cb', '#ff69b4'] });
+            btns[idx].classList.add('correct');
+            f.innerHTML = `<span class="feedback-title">💮 よっしゃ！</span><span class="feedback-comment">${q.ok}</span>`;
+            f.style.background = "#e8f5e9"; f.style.color = "#2e7d32"; f.style.border = "1px solid #c8e6c9";
+            score++;
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#ffc0cb', '#ff69b4', '#ffd700'] });
         } else {
             btns[idx].classList.add('wrong'); btns[q.c].classList.add('correct');
-            f.innerHTML = `❌ 正解は「${q.a[q.c]}」`; f.style.color = "#d32f2f";
+            f.innerHTML = `<span class="feedback-title">😭 おーい！</span><span class="feedback-comment">${q.no}</span>`;
+            f.style.background = "#fff3e0"; f.style.color = "#e65100"; f.style.border = "1px solid #ffe0b2";
         }
         f.style.display = 'block'; document.getElementById('next-btn').style.display = 'block';
     }
+
     function nextQuestion() {
         currentQ++; if (currentQ < quizData.length) initQuiz();
         else showResult();
     }
+
     function showResult() {
         const ui = document.getElementById('quiz-ui');
         let title, comment, shogo, emoji;
-        if (score <= 3) { title = "修行中！"; comment = "八千代愛を深めましょう！"; shogo = "八千代ビギナー"; emoji = "🐍"; }
-        else if (score <= 6) { title = "八千代通！"; comment = "素晴らしい知識です！"; shogo = "八千代の賢者"; emoji = "🌸"; }
-        else { title = "完璧です！"; comment = "あなたは八千代の守り神！"; shogo = "八千代神"; emoji = "✨"; }
-        ui.innerHTML = `<h1>${title}</h1><div style="text-align:center;"><span class="shogo">${emoji}${shogo}${emoji}</span><p>正解数: ${score} / 8</p><button onclick="location.reload()" style="width:100%; padding:15px; border-radius:12px; background:var(--primary-color); color:white; border:none; font-weight:bold;">もう一度あそぶ</button></div>`;
+        if (score <= 3) { title = "伸びしろ日本一！"; comment = "産直市場で野菜食べて出直してきんさい！"; shogo = "八千代ビギナー"; emoji = "🌱"; }
+        else if (score <= 6) { title = "ええ感じじゃね！"; comment = "あなたはもう、立派な八千代通です。"; shogo = "八千代の賢者"; emoji = "🌸"; }
+        else { title = "八千代の神様！？"; comment = "これからはあなたが八千代の未来を導いてください！"; shogo = "八千代神"; emoji = "✨"; }
+        ui.innerHTML = `<h1 style="border:none;">結果発表</h1><div style="text-align:center;"><div style="font-size:3rem; margin-bottom:10px;">${emoji}</div><div style="font-size:1.5rem; font-weight:bold; color:var(--primary-color); margin-bottom:5px;">${shogo}</div><p style="font-size:1.2rem; font-weight:bold;">${score} / 8 問正解</p><p style="padding:15px; background:#f9f9f9; border-radius:10px; font-size:0.9rem;">${comment}</p><button onclick="location.reload()" style="width:100%; padding:15px; border-radius:12px; background:var(--primary-color); color:white; border:none; font-weight:bold; cursor:pointer;">もう一度あそぶ</button></div>`;
     }
     initQuiz();
 </script>
