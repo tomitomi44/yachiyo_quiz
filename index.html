@@ -3,54 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>安芸高田市八千代町 未来へのクイズ</title>
+    <title>安芸高田市八千代町 桜クイズ</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
-        :root { --primary-color: #2e7d32; --bg-color: #f1f8e9; }
+        :root { --primary-color: #e91e63; --secondary-color: #2e7d32; --bg-color: #fff5f8; }
         body { font-family: sans-serif; background-color: var(--bg-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
-        .container { background: white; width: 100%; max-width: 500px; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        h1 { color: var(--primary-color); font-size: 1.4rem; text-align: center; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; }
-        .stats { font-size: 0.9rem; text-align: right; color: #666; margin-bottom: 10px; }
-        .question-text { font-size: 1.1rem; font-weight: bold; line-height: 1.5; margin-bottom: 20px; }
-        .options { display: grid; gap: 12px; }
-        button { padding: 15px; font-size: 1rem; border: 2px solid #ddd; border-radius: 12px; background: white; cursor: pointer; transition: 0.2s; text-align: left; }
-        button:hover { border-color: var(--primary-color); }
-        button.correct { background-color: #c8e6c9; border-color: #4caf50; }
-        button.wrong { background-color: #ffcdd2; border-color: #f44336; }
-        #feedback { margin-top: 20px; padding: 15px; border-radius: 10px; display: none; line-height: 1.6; border: 1px solid #ccc; background: #fafafa; }
-        .next-btn { display: block; width: 100%; margin-top: 20px; padding: 12px; background: var(--primary-color); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; display: none; }
-        .sim-link-box { margin-top: 40px; padding-top: 20px; border-top: 2px dashed #ccc; text-align: center; }
-        .sim-btn { display: inline-block; background: #1a237e; color: white; padding: 12px 25px; border-radius: 30px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .container { background: white; width: 100%; max-width: 500px; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(233,30,99,0.2); border: 3px solid #f8bbd0; }
+        h1 { color: var(--primary-color); font-size: 1.4rem; text-align: center; border-bottom: 2px dashed #f8bbd0; padding-bottom: 10px; }
+        .stats { font-size: 0.9rem; text-align: right; color: #ad1457; font-weight: bold; margin-bottom: 10px; }
+        .question-text { font-size: 1.2rem; font-weight: bold; line-height: 1.6; margin-bottom: 20px; }
+        .options { display: grid; gap: 15px; }
+        button { padding: 15px; font-size: 1.1rem; border: 2px solid #f8bbd0; border-radius: 15px; background: #fff; cursor: pointer; transition: 0.3s; text-align: left; }
+        button:hover { background: #fce4ec; transform: translateY(-3px); }
+        button.correct { background-color: #c8e6c9 !important; border-color: #4caf50; animation: bounce 0.5s; }
+        button.wrong { background-color: #ffcdd2 !important; border-color: #f44336; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        #feedback { margin-top: 20px; padding: 15px; border-radius: 12px; display: none; font-size: 1.1rem; font-weight: bold; text-align: center; border: 1px solid #ccc; background: #fff; }
+        .next-btn { display: block; width: 100%; margin-top: 20px; padding: 15px; background: var(--primary-color); color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 1.2rem; cursor: pointer; display: none; }
+        .sim-link-box { margin-top: 40px; padding: 20px; border-radius: 15px; background: #e8f5e9; text-align: center; }
+        .sim-btn { display: inline-block; background: #2e7d32; color: white; padding: 12px 25px; border-radius: 30px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: 0.3s; }
+        .result-title { font-size: 1.8rem; color: #ad1457; margin-bottom: 10px; }
+        .result-comment { font-size: 1.2rem; line-height: 1.6; margin-bottom: 20px; color: #333; }
+        .shogo { font-size: 2rem; margin: 10px 0; display: block; }
     </style>
 </head>
 <body>
+
 <div class="container">
-    <h1>八千代町 未来へのクイズ</h1>
-    <div class="stats" id="progress">第 1 問 / 8 問</div>
-    <div class="question-box">
-        <div class="question-text" id="q-text"></div>
-        <div class="options" id="options"></div>
+    <div id="quiz-ui">
+        <h1>🌸 八千代町 さくらクイズ 🌸</h1>
+        <div class="stats" id="progress">第 1 問 / 8 問</div>
+        <div id="q-text" class="question-text"></div>
+        <div id="options" class="options"></div>
+        <div id="feedback"></div>
+        <button id="next-btn" class="next-btn" onclick="nextQuestion()">次の問題へ進む！ ▶</button>
     </div>
-    <div id="feedback"></div>
-    <button class="next-btn" id="next-btn" onclick="nextQuestion()">次の問題へ</button>
 
     <div class="sim-link-box">
-        <p style="font-size:0.8rem; color:#666; margin-bottom:10px;">＼ もっと詳しく知る ／</p>
-        <a href="mirai.html" class="sim-btn">📊 未来人口シミュレーター</a>
+        <p style="font-size:0.8rem; color:#2e7d32; margin-bottom:10px; font-weight:bold;">もっと詳しく未来をシミュレーション！</p>
+        <a href="mirai.html" class="sim-btn">📊 未来人口予測を見る</a>
     </div>
 </div>
 
 <script>
     const quizData = [
-        { q: "土師ダム周辺の桜はおよそ何本？", a: ["約3,000本", "約6,000本", "約12,000本"], c: 1, info: "正解は6,000本！" },
-        { q: "CHEMISTRYのメンバーで八千代町出身なのは？", a: ["堂珍 嘉邦", "川畑 要", "田丸 美寿々"], c: 0, info: "正解は堂珍さんです！" },
-        { q: "ダム湖百選に選ばれた湖の名前は？", a: ["高田湖", "八千代湖", "のどごえ湖"], c: 1, info: "正解は八千代湖です！" },
-        { q: "2100年の予測。八千代地区の人口は何人まで減る可能性がある？", a: ["約1,500人", "約2,000人", "約880人"], c: 2, info: "正解は約880人です。" },
-        { q: "2045年の予測高齢化率は？", a: ["約35％", "約48％", "約60％"], c: 1, info: "正解は約48％です。" },
-        { q: "2045年の目標達成に、毎年必要な20代の若者定住数は？", a: ["12名", "30名", "50名"], c: 0, info: "正解は12名です。" },
-        { q: "2019年に入込観光客が51％増えた施設は？", a: ["美術館", "サイクリングターミナル", "八千代産直市場"], c: 2, info: "正解は産直市場です！" },
-        { q: "安芸高田市が掲げる基本理念は？", a: ["若者移住最大化", "子どもたちの未来を守る", "デジタル世界一"], c: 1, info: "子どもたちの未来を守ることが一番の理念です。" }
+        { q: "土師ダム周辺の桜はおよそ何本？", a: ["約3,000本", "約6,000本", "約12,000本"], c: 1, info: "6,000本の桜は圧巻です！" },
+        { q: "CHEMISTRYのメンバーで八千代町出身なのは？", a: ["堂珍 嘉邦", "川畑 要", "田丸 美寿々"], c: 0, info: "堂珍さんの美声は八千代の誇り！" },
+        { q: "ダム湖百選に選ばれた湖の名前は？", a: ["高田湖", "八千代湖", "のどごえ湖"], c: 1, info: "八千代湖、美しいですよね。" },
+        { q: "2100年の予測。八千代地区の人口は最悪何人まで減る？", a: ["約1,500人", "約2,000人", "約880人"], c: 2, info: "880人。この数字を皆で変えましょう。" },
+        { q: "2045年の予測高齢化率は？", a: ["約35％", "約48％", "約60％"], c: 1, info: "約半分が高齢者に。支え合いが大切です。" },
+        { q: "2045年の目標達成に、毎年必要な20代の若者定住数は？", a: ["12名", "30名", "50名"], c: 0, info: "毎年12人の仲間を迎えたいですね。" },
+        { q: "2019年に入込観光客が51％増えた施設は？", a: ["美術館", "サイクリングターミナル", "八千代産直市場"], c: 2, info: "美味しいものいっぱいの産直市場！" },
+        { q: "安芸高田市が掲げる基本理念は？", a: ["若者移住最大化", "子どもたちの未来を守る", "デジタル世界一"], c: 1, info: "未来の子どもたちのために！" }
     ];
+
     let currentQ = 0; let score = 0;
+
     function initQuiz() {
         const q = quizData[currentQ];
         document.getElementById('progress').innerText = `第 ${currentQ + 1} 問 / 8 問`;
@@ -63,26 +71,10 @@
         document.getElementById('feedback').style.display = 'none';
         document.getElementById('next-btn').style.display = 'none';
     }
+
     function select(idx) {
         const q = quizData[currentQ]; const btns = document.querySelectorAll('.options button');
-        const feedback = document.getElementById('feedback');
+        const f = document.getElementById('feedback');
         btns.forEach(b => b.disabled = true);
-        if (idx === q.c) { btns[idx].classList.add('correct'); feedback.innerHTML = `<strong>⭕ 正解！</strong><br>${q.info}`; score++; }
-        else { btns[idx].classList.add('wrong'); btns[q.c].classList.add('correct'); feedback.innerHTML = `<strong>❌ 残念...</strong><br>正解は「${q.a[q.c]}」でした。`; }
-        feedback.style.display = 'block'; document.getElementById('next-btn').style.display = 'block';
-    }
-    function nextQuestion() {
-        currentQ++; if (currentQ < quizData.length) initQuiz();
-        else showResult();
-    }
-    function showResult() {
-        const container = document.querySelector('.question-box');
-        let msg = score <= 3 ? "まだまだ八千代愛が足りないようです。" : score <= 6 ? "よくわかってます！" : "あなたは最高！！";
-        container.innerHTML = `<h2>クイズ終了！</h2><p style="font-size:1.2rem; text-align:center;">正解数: ${score} / 8</p><p style="text-align:center; font-weight:bold; color:#d32f2f;">${msg}</p>`;
-        document.getElementById('next-btn').style.display = 'none';
-        document.getElementById('feedback').style.display = 'none';
-    }
-    initQuiz();
-</script>
-</body>
-</html>
+        if (idx === q.c) {
+            btns[idx].classList.add('correct'); f.innerHTML = `✨ 正解！ ✨<br>
