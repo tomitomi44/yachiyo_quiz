@@ -4,48 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>八千代町 未来シミュレーター</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: sans-serif; background-image: url('https://images.unsplash.com/photo-1522383225653-ed111181a951?auto=format&fit=crop&q=80&w=1200'); background-size: cover; background-position: center; background-attachment: fixed; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .card { background: rgba(255, 255, 255, 0.9); width: 100%; max-width: 480px; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); backdrop-filter: blur(5px); }
-        h1 { color: #2e7d32; text-align: center; font-size: 1.3rem; border-bottom: 2px solid #2e7d32; padding-bottom: 10px; }
-        .input-group { background: #e8f5e9; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 20px; }
-        input { padding: 10px; width: 60px; font-size: 1.2rem; border: 2px solid #2e7d32; border-radius: 8px; text-align: center; }
-        .toggle-box { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
-        .toggle-btn { flex: 1; padding: 10px; border: 2px solid #2e7d32; border-radius: 25px; background: white; cursor: pointer; font-weight: bold; }
-        .toggle-btn.active { background: #2e7d32; color: white; }
-        .result-item { background: white; padding: 15px; border-radius: 12px; margin-bottom: 15px; border-left: 6px solid #2e7d32; }
-        .year { font-weight: bold; display: flex; justify-content: space-between; }
-        .val { font-size: 1.3rem; font-weight: bold; color: #1b5e20; }
-        .comment { font-size: 0.85rem; color: #666; margin-top: 8px; font-style: italic; background: #fafafa; padding: 5px; }
+        body { font-family: sans-serif; background-color: #f0f4f8; margin: 0; padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        h1 { color: #003366; text-align: center; font-size: 1.4rem; border-bottom: 2px solid #003366; padding-bottom: 10px; }
+        .input-group { margin: 25px 0; text-align: center; }
+        input { padding: 10px; font-size: 1.1rem; width: 70px; text-align: center; border: 2px solid #ddd; border-radius: 10px; }
+        button { padding: 10px 20px; background: #003366; color: white; border: none; border-radius: 10px; cursor: pointer; }
+        .result-box { margin-top: 20px; padding: 15px; background: #eef6ff; border-radius: 10px; display: none; }
+        .nav-links { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; display: flex; flex-direction: column; gap: 10px; text-align: center; }
+        .nav-btn { text-decoration: none; padding: 10px; border-radius: 20px; font-weight: bold; font-size: 0.85rem; }
+        .quiz-link { background: #2e7d32; color: white; }
+        .kagura-link { background: #8b0000; color: #d4af37; border: 1px solid #d4af37; }
     </style>
 </head>
 <body>
-<div class="card">
+<div class="container">
     <h1>八千代町 未来シミュレーター</h1>
-    <div class="input-group">今の年齢： <input type="number" id="ageInput" value="40" oninput="calculate()"> 歳</div>
-    <div class="toggle-box">
-        <button id="btn-w" class="toggle-btn active" onclick="setMode('w')">何もしない未来</button>
-        <button id="btn-b" class="toggle-btn" onclick="setMode('b')">目標を達成した未来</button>
+    <div class="input-group">
+        <p>あなたの年齢は？</p>
+        <input type="number" id="age" value="20"> <button onclick="simulate()">予測する</button>
     </div>
-    <div id="results"></div>
-    <a href="index.html" style="display:block; text-align:center; margin-top:20px; color:#555; text-decoration:none;">← クイズに戻る</a>
+    <div id="result" class="result-box">
+        <p id="prediction-text"></p>
+        <canvas id="popChart" height="200"></canvas>
+    </div>
+    <div class="nav-links">
+        <a href="index.html" class="nav-btn quiz-link">◀ クイズに戻る</a>
+        <a href="kagura.html" class="nav-btn kagura-link">🥁 お囃子ボードであそぶ</a>
+    </div>
 </div>
 <script>
-    let mode = 'w';
-    const points = {
-        w: [{y:2035, p:2486, m:"土師ダムでお弁当を食べている頃？"}, {y:2045, p:2368, m:"神楽のベテラン団員として活躍中！"}, {y:2100, p:880, m:"伝説の100歳超えとして敬われる存在。"}],
-        b: [{y:2035, p:3100, m:"移住者が増え、産直市場は大賑わい！"}, {y:2045, p:3000, m:"子供たちの声が町に戻ってきました。"}, {y:2100, p:2800, m:"持続可能な美しい町が続いています。"}]
-    };
-    function setMode(m) { mode = m; document.getElementById('btn-w').classList.toggle('active', m === 'w'); document.getElementById('btn-b').classList.toggle('active', m === 'b'); calculate(); }
-    function calculate() {
-        const age = parseInt(document.getElementById('ageInput').value) || 0;
-        const res = document.getElementById('results'); const curY = new Date().getFullYear(); let html = "";
-        points[mode].forEach(d => {
-            html += `<div class="result-item"><div class="year"><span>${d.y}年</span><span>${age + (d.y - curY)}歳</span></div><div>推計人口: <span class="val">${d.p.toLocaleString()}人</span></div><div class="comment">💡 ${d.m}</div></div>`;
-        });
-        res.innerHTML = html;
+    let myChart = null;
+    function simulate() {
+        const age = parseInt(document.getElementById('age').value);
+        document.getElementById('result').style.display = 'block';
+        document.getElementById('prediction-text').innerHTML = `2045年、あなたは ${age + 20} 歳。<br>町の2人に1人が高齢者になる予測です。`;
+        const ctx = document.getElementById('popChart').getContext('2d');
+        if (myChart) myChart.destroy();
+        myChart = new Chart(ctx, { type: 'bar', data: { labels: ['2020年', '2045年'], datasets: [{ label: '地区人口', data: [3600, 2400], backgroundColor: ['#003366', '#ff6384'] }] } });
     }
-    calculate();
 </script>
 </body>
 </html>
