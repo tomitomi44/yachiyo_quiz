@@ -19,14 +19,15 @@
         button.wrong { background-color: #ffcdd2 !important; border-color: #f44336; }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
         
-        /* コメントエリアのデザイン */
         #feedback { margin-top: 20px; padding: 15px; border-radius: 12px; display: none; text-align: left; line-height: 1.5; }
         .feedback-title { font-size: 1.3rem; font-weight: bold; margin-bottom: 5px; display: block; text-align: center; }
         .feedback-comment { font-size: 0.95rem; color: #444; }
 
         .next-btn { display: none; width: 100%; margin-top: 20px; padding: 15px; background: var(--primary-color); color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
+        
+        /* リンクボタンのデザイン */
         .nav-section { margin-top: 30px; padding-top: 20px; border-top: 2px dashed #ccc; text-align: center; display: flex; flex-direction: column; gap: 10px; }
-        .nav-btn { display: block; padding: 12px; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 0.9rem; }
+        .nav-btn { display: block; padding: 12px; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 0.9rem; transition: 0.3s; }
         .sim-link { background: #003366; color: white; }
         .kagura-link { background: #8b0000; color: #d4af37; border: 1px solid #d4af37; }
     </style>
@@ -41,12 +42,15 @@
         <div id="feedback"></div>
         <button id="next-btn" class="next-btn" onclick="nextQuestion()">次の問題へ ▶</button>
     </div>
+
     <div class="nav-section">
         <a href="mirai.html" class="nav-btn sim-link">📈 未来シミュレーター</a>
         <a href="kagura.html" class="nav-btn kagura-link">🥁 八千代 お囃子ボード</a>
     </div>
 </div>
+
 <script>
+    // クイズのデータとロジックは前回と同じものを保持
     const quizData = [
         { 
             q: "土師ダム周辺の桜はおよそ何本？", 
@@ -74,14 +78,14 @@
             a: ["約1,500人", "約2,000人", "約880人"], 
             c: 2,
             ok: "その通り。880人…これはみんなでなんとかしないといけん数字！",
-            no: "実は880人。びっくりでしょ！？"
+            no: "実は880人。このままじゃ八千代お囃子が聞こえなくなるかも！？"
         },
         { 
             q: "2045年の予測高齢化率は？", 
             a: ["約35％", "約48％", "約60％"], 
             c: 1,
             ok: "正解！2人に1人が高齢者。おじいちゃんおばあちゃんを支えんと！",
-            no: "残念、約48％。"
+            no: "残念、約48％"
         },
         { 
             q: "2045年の目標達成に、毎年必要な20代の若者定住数は？", 
@@ -102,7 +106,7 @@
             a: ["若者移住最大化", "子どもたちの未来を守る", "デジタル世界一"], 
             c: 1,
             ok: "完璧！すべては未来の子供たちのために。熱いですね！",
-            no: "正解は「子どもたちの未来を守る」。"
+            no: "正解は「子どもたちの未来を守る」。これが八千代の魂です。"
         }
     ];
 
@@ -156,4 +160,3 @@
 </script>
 </body>
 </html>
-
