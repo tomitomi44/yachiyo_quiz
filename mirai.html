@@ -6,44 +6,154 @@
     <title>八千代町 未来シミュレーター</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: sans-serif; background-color: #f0f4f8; margin: 0; padding: 20px; }
-        .container { max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        h1 { color: #003366; text-align: center; font-size: 1.4rem; border-bottom: 2px solid #003366; padding-bottom: 10px; }
-        .input-group { margin: 25px 0; text-align: center; }
-        input { padding: 10px; font-size: 1.1rem; width: 70px; text-align: center; border: 2px solid #ddd; border-radius: 10px; }
-        button { padding: 10px 20px; background: #003366; color: white; border: none; border-radius: 10px; cursor: pointer; }
-        .result-box { margin-top: 20px; padding: 15px; background: #eef6ff; border-radius: 10px; display: none; }
-        .nav-links { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; display: flex; flex-direction: column; gap: 10px; text-align: center; }
-        .nav-btn { text-decoration: none; padding: 10px; border-radius: 20px; font-weight: bold; font-size: 0.85rem; }
-        .quiz-link { background: #2e7d32; color: white; }
-        .kagura-link { background: #8b0000; color: #d4af37; border: 1px solid #d4af37; }
+        /* 初期のシンプルで清潔感のあるスタイルを再現 */
+        body { 
+            font-family: 'Helvetica Neue', Arial, sans-serif; 
+            background-color: #f0f4f8; 
+            margin: 0; 
+            padding: 20px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh;
+        }
+        .container { 
+            width: 100%;
+            max-width: 500px; 
+            background: white; 
+            padding: 35px 25px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08); 
+        }
+        h1 { 
+            color: #003366; 
+            text-align: center; 
+            font-size: 1.5rem; 
+            margin-bottom: 30px; 
+            letter-spacing: 1px;
+        }
+        .input-group { 
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center; 
+            margin-bottom: 25px;
+        }
+        p { margin-top: 0; color: #444; font-weight: bold; }
+        input { 
+            padding: 12px; 
+            font-size: 1.2rem; 
+            width: 80px; 
+            text-align: center; 
+            border: 2px solid #cbd5e1; 
+            border-radius: 10px; 
+            margin-bottom: 15px;
+        }
+        .calc-btn { 
+            display: block;
+            width: 100%;
+            padding: 15px; 
+            background-color: #003366; 
+            color: white; 
+            border: none; 
+            border-radius: 10px; 
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer; 
+            transition: 0.2s; 
+        }
+        .calc-btn:hover { background-color: #002244; }
+        
+        .result-box { 
+            margin-top: 30px; 
+            padding: 20px; 
+            background: #eff6ff; 
+            border-left: 5px solid #003366;
+            border-radius: 10px; 
+            display: none; 
+        }
+        #prediction-text { line-height: 1.7; font-size: 1rem; color: #1e293b; }
+        .chart-container { margin-top: 20px; height: 250px; }
+
+        /* 画面下のナビゲーション */
+        .nav-section { 
+            margin-top: 40px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px;
+        }
+        .nav-btn { 
+            text-align: center;
+            text-decoration: none; 
+            padding: 12px; 
+            border-radius: 30px; 
+            font-size: 0.9rem; 
+            font-weight: bold; 
+            transition: 0.2s;
+        }
+        .quiz-btn { background: #e8f5e9; color: #2e7d32; border: 1px solid #2e7d32; }
+        .kagura-btn { background: #fdf2f2; color: #8b0000; border: 1px solid #8b0000; }
+        .nav-btn:hover { opacity: 0.8; }
     </style>
 </head>
 <body>
+
 <div class="container">
     <h1>八千代町 未来シミュレーター</h1>
+    
     <div class="input-group">
-        <p>あなたの年齢は？</p>
-        <input type="number" id="age" value="20"> <button onclick="simulate()">予測する</button>
+        <p>現在の年齢を入力してください</p>
+        <input type="number" id="age" value="20" min="0" max="100">
+        <button class="calc-btn" onclick="simulate()">未来を予測する</button>
     </div>
+
     <div id="result" class="result-box">
-        <p id="prediction-text"></p>
-        <canvas id="popChart" height="200"></canvas>
+        <div id="prediction-text"></div>
+        <div class="chart-container">
+            <canvas id="popChart"></canvas>
+        </div>
     </div>
-    <div class="nav-links">
-        <a href="index.html" class="nav-btn quiz-link">◀ クイズに戻る</a>
-        <a href="kagura.html" class="nav-btn kagura-link">🥁 お囃子ボードであそぶ</a>
+
+    <div class="nav-section">
+        <a href="index.html" class="nav-btn quiz-btn">🌸 クイズに挑戦する</a>
+        <a href="kagura.html" class="nav-btn kagura-btn">🥁 お囃子ボードで遊ぶ</a>
     </div>
 </div>
+
 <script>
     let myChart = null;
     function simulate() {
         const age = parseInt(document.getElementById('age').value);
-        document.getElementById('result').style.display = 'block';
-        document.getElementById('prediction-text').innerHTML = `2045年、あなたは ${age + 20} 歳。<br>町の2人に1人が高齢者になる予測です。`;
+        const resultBox = document.getElementById('result');
+        const text = document.getElementById('prediction-text');
+        
+        resultBox.style.display = 'block';
+        const futureAge = age + 21; // 2045年までの想定
+        
+        text.innerHTML = `<strong>2045年、あなたは ${futureAge} 歳になります。</strong><br>この年、八千代地区の高齢化率は約48％（2人に1人が65歳以上）に達すると予測されています。`;
+
         const ctx = document.getElementById('popChart').getContext('2d');
         if (myChart) myChart.destroy();
-        myChart = new Chart(ctx, { type: 'bar', data: { labels: ['2020年', '2045年'], datasets: [{ label: '地区人口', data: [3600, 2400], backgroundColor: ['#003366', '#ff6384'] }] } });
+        myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['現在', '2045年'],
+                datasets: [{
+                    label: '地区人口の推移',
+                    data: [3600, 2400],
+                    backgroundColor: ['#003366', '#ff6384'],
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, title: { display: true, text: '人' } } }
+            }
+        });
+        
+        // 結果までスクロール
+        resultBox.scrollIntoView({ behavior: 'smooth' });
     }
 </script>
 </body>
