@@ -11,6 +11,7 @@
             --gold: #d4af37;
             --washi: #fdf5e6;
             --future-blue: #003366;
+            --quiz-green: #2e7d32;
         }
         body {
             background-color: #222;
@@ -25,14 +26,12 @@
             overflow: hidden;
             touch-action: manipulation;
         }
-        /* 画面揺れアニメーション */
         .shake { animation: shake-ani 0.1s ease-in-out; }
         @keyframes shake-ani {
             0%, 100% { transform: translate(0,0); }
             25% { transform: translate(3px, 3px); }
             75% { transform: translate(-3px, -3px); }
         }
-
         .container {
             background: var(--washi);
             background-image: url("https://www.transparenttextures.com/patterns/p6.png");
@@ -69,17 +68,19 @@
         }
         .voice-btn:active { transform: translate(2px, 2px); box-shadow: none; }
 
+        /* ナビゲーションボタンの統一 */
         .link-section {
             margin-top: 35px; padding-top: 20px; border-top: 1px dashed var(--shrine-red);
             display: flex; flex-direction: column; gap: 12px;
         }
-        .sim-btn {
-            display: block; background: var(--future-blue); color: white;
-            text-decoration: none; padding: 14px; border-radius: 35px;
-            font-weight: bold; font-size: 0.95rem; box-shadow: 0 4px 0 #001a33;
+        .nav-btn {
+            display: block; text-align: center; text-decoration: none; padding: 14px; 
+            border-radius: 35px; font-weight: bold; font-size: 0.95rem; transition: 0.2s;
         }
-        .sim-btn:active { transform: translateY(2px); box-shadow: none; }
-        .back-link { color: var(--shrine-red); text-decoration: none; font-size: 0.9rem; font-weight: bold; }
+        .sim-link { background: var(--future-blue); color: white; box-shadow: 0 4px 0 #001a33; }
+        .quiz-link { background: #e8f5e9; color: var(--quiz-green); border: 1px solid var(--quiz-green); }
+        .nav-btn:active { transform: translateY(2px); box-shadow: none; }
+
     </style>
 </head>
 <body id="body">
@@ -98,7 +99,7 @@
             <span class="inst-icon">🔔</span><span class="inst-name">手打金</span>
         </button>
         <button class="inst-btn" onclick="play(800, 0.8, 'flute')">
-            <span class="inst-icon">🌬️</span><span class="inst-name">笛</span>
+            <span class="inst-icon">🪈</span><span class="inst-name">笛</span>
         </button>
     </div>
 
@@ -108,40 +109,31 @@
     </div>
 
     <div class="link-section">
-        <a href="mirai.html" class="sim-btn">📈 未来シミュレーター</a>
-        <a href="index.html" class="back-link">◀ クイズに戻る</a>
+        <a href="mirai.html" class="nav-btn sim-link">📈 未来シミュレーター</a>
+        <a href="index.html" class="nav-btn quiz-link">🌸 クイズに挑戦する</a>
     </div>
 </div>
 
 <script>
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
     function play(freq, duration, type) {
-        // 音源作成
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = (type === 'metal') ? 'triangle' : 'sine';
         osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        
         if (type === 'big') {
             osc.frequency.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
-            // エフェクト：桜と揺れ
             confetti({ particleCount: 12, spread: 60, origin: { y: 0.7 }, colors: ['#ffd700', '#ff0000', '#ffffff'] });
             document.getElementById('body').classList.add('shake');
             setTimeout(() => document.getElementById('body').classList.remove('shake'), 100);
         } else if (type === 'flute') {
             osc.frequency.linearRampToValueAtTime(freq + 100, audioCtx.currentTime + duration);
         }
-
         gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
-
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + duration);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + duration);
     }
-
     function voice(text, pitch) {
         const uttr = new SpeechSynthesisUtterance(text);
         uttr.lang = "ja-JP"; uttr.pitch = pitch; uttr.rate = 1.7;
