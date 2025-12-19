@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>安芸高田市八千代町 クイズ</title>
+    <style>
+        :root { --primary-color: #2e7d32; --bg-color: #f1f8e9; }
+        body { font-family: sans-serif; background-color: var(--bg-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        .container { background: white; width: 100%; max-width: 500px; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        h1 { color: var(--primary-color); font-size: 1.4rem; text-align: center; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; }
+        .question-text { font-size: 1.1rem; font-weight: bold; margin-bottom: 20px; }
+        .options { display: grid; gap: 12px; }
+        button { padding: 15px; font-size: 1rem; border: 2px solid #ddd; border-radius: 12px; background: white; cursor: pointer; text-align: left; }
+        button.correct { background-color: #c8e6c9; border-color: #4caf50; }
+        button.wrong { background-color: #ffcdd2; border-color: #f44336; }
+        #feedback { margin-top: 20px; padding: 15px; border-radius: 10px; display: none; line-height: 1.6; border: 1px solid #ccc; }
+        .next-btn { display: block; width: 100%; margin-top: 20px; padding: 12px; background: var(--primary-color); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; display: none; }
+        /* シミュレーターボタンのスタイル */
+        .sim-link-box { margin-top: 40px; padding-top: 20px; border-top: 2px dashed #ccc; text-align: center; }
+        .sim-btn { display: inline-block; background: #1a237e; color: white; padding: 12px 25px; border-radius: 30px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>八千代町 未来へのクイズ</h1>
+    <div id="progress" style="text-align:right; font-size:0.8rem; margin-bottom:10px;"></div>
+    
+    <div class="question-box">
+        <div class="question-text" id="q-text"></div>
+        <div class="options" id="options"></div>
+    </div>
+    <div id="feedback"></div>
+    <button class="next-btn" id="next-btn" onclick="nextQuestion()">次の問題へ</button>
+
+    <div class="sim-link-box">
+        <p style="font-size:0.8rem; color:#666;">こちらもチェック！</p>
+        <a href="mirai.html" class="sim-btn">📊 未来人口シミュレーター</a>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        { q: "八千代町の「土師ダム」周辺の桜は約何本？", a: ["約3,000本", "約6,000本", "約12,000本"], c: 1, info: "正解は6,000本です！" },
+        { q: "八千代町出身のCHEMISTRYメンバーは？", a: ["堂珍 嘉邦", "川畑 要", "田丸 美寿々"], c: 0, info: "正解は堂珍さんです！" },
+        { q: "2100年の予測。八千代地区の人口は何人まで減る可能性がある？", a: ["約1,500人", "約2,000人", "約880人"], c: 2, info: "正解は約880人。厳しい予測が出ています。" }
+    ];
+    let currentQ = 0; let score = 0;
+    function initQuiz() {
+        const q = quizData[currentQ];
+        document.getElementById('progress').innerText = `第 ${currentQ + 1} 問 / ${quizData.length} 問`;
+        document.getElementById('q-text').innerText = q.q;
+        const opts = document.getElementById('options');
+        opts.innerHTML = '';
+        q.a.forEach((t, i) => {
+            const b = document.createElement('button'); b.innerText = t; b.onclick = () => select(i); opts.appendChild(b);
+        });
+        document.getElementById('feedback').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'none';
+    }
+    function select(idx) {
+        const q = quizData[currentQ]; const btns = document.querySelectorAll('.options button');
+        const f = document.getElementById('feedback');
+        btns.forEach(b => b.disabled = true);
+        if (idx === q.c) { btns[idx].classList.add('correct'); f.innerHTML = "⭕ 正解！"; score++; }
+        else { btns[idx].classList.add('wrong'); btns[q.c].classList.add('correct'); f.innerHTML = `❌ 正解は ${q.a[q.c]}`; }
+        f.style.display = 'block'; document.getElementById('next-btn').style.display = 'block';
+    }
+    function nextQuestion() {
+        currentQ++; if (currentQ < quizData.length) initQuiz();
+        else showResult();
+    }
+    function showResult() {
+        document.querySelector('.question-box').innerHTML = `<h2>終了！正解数: ${score}/${quizData.length}</h2>`;
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('feedback').style.display = 'none';
+    }
+    initQuiz();
+</script>
+</body>
+</html>
