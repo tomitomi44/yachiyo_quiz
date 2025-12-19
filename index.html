@@ -20,13 +20,14 @@
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
         #feedback { margin-top: 20px; padding: 15px; border-radius: 10px; display: none; text-align: center; font-weight: bold; font-size: 1.2rem; }
         .next-btn { display: none; width: 100%; margin-top: 20px; padding: 15px; background: var(--primary-color); color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
-        .sim-link-box { margin-top: 40px; padding-top: 20px; border-top: 2px dashed #ccc; text-align: center; }
-        .sim-btn { display: inline-block; background: #1a237e; color: white; padding: 12px 25px; border-radius: 30px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .nav-section { margin-top: 30px; padding-top: 20px; border-top: 2px dashed #ccc; text-align: center; display: flex; flex-direction: column; gap: 10px; }
+        .nav-btn { display: block; padding: 12px; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 0.9rem; transition: 0.3s; }
+        .sim-link { background: #003366; color: white; }
+        .kagura-link { background: #8b0000; color: #d4af37; border: 1px solid #d4af37; }
         .shogo { font-size: 2rem; margin: 10px 0; display: block; }
     </style>
 </head>
 <body>
-
 <div class="container">
     <div id="quiz-ui">
         <h1>八千代町 未来へのクイズ</h1>
@@ -36,13 +37,11 @@
         <div id="feedback"></div>
         <button id="next-btn" class="next-btn" onclick="nextQuestion()">次の問題へ ▶</button>
     </div>
-
-    <div class="sim-link-box">
-        <p style="font-size:0.8rem; color:#666; margin-bottom:10px;">＼ こちらもチェック！ ／</p>
-        <a href="mirai.html" class="sim-btn">📊 未来人口シミュレーター</a>
+    <div class="nav-section">
+        <a href="mirai.html" class="nav-btn sim-link">📈 未来シミュレーター</a>
+        <a href="kagura.html" class="nav-btn kagura-link">🥁 八千代 お囃子ボード</a>
     </div>
 </div>
-
 <script>
     const quizData = [
         { q: "土師ダム周辺の桜はおよそ何本？", a: ["約3,000本", "約6,000本", "約12,000本"], c: 1 },
@@ -54,9 +53,7 @@
         { q: "2019年に入込観光客が51％増えた施設は？", a: ["美術館", "サイクリングターミナル", "八千代産直市場"], c: 2 },
         { q: "安芸高田市が掲げる基本理念は？", a: ["若者移住最大化", "子どもたちの未来を守る", "デジタル世界一"], c: 1 }
     ];
-
     let currentQ = 0; let score = 0;
-
     function initQuiz() {
         const q = quizData[currentQ];
         document.getElementById('progress').innerText = `第 ${currentQ + 1} 問 / 8 問`;
@@ -68,43 +65,30 @@
         document.getElementById('feedback').style.display = 'none';
         document.getElementById('next-btn').style.display = 'none';
     }
-
     function select(idx) {
         const q = quizData[currentQ]; const btns = document.querySelectorAll('.options button');
         const f = document.getElementById('feedback');
         btns.forEach(b => b.disabled = true);
         if (idx === q.c) {
             btns[idx].classList.add('correct'); f.innerHTML = "⭕ 正解！"; f.style.color = "#2e7d32"; score++;
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#ffc0cb', '#ff69b4', '#ffffff'] });
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#ffc0cb', '#ff69b4'] });
         } else {
             btns[idx].classList.add('wrong'); btns[q.c].classList.add('correct');
-            f.innerHTML = `❌ 残念！ 正解は「${q.a[q.c]}」`; f.style.color = "#d32f2f";
+            f.innerHTML = `❌ 正解は「${q.a[q.c]}」`; f.style.color = "#d32f2f";
         }
         f.style.display = 'block'; document.getElementById('next-btn').style.display = 'block';
     }
-
     function nextQuestion() {
         currentQ++; if (currentQ < quizData.length) initQuiz();
         else showResult();
     }
-
     function showResult() {
         const ui = document.getElementById('quiz-ui');
         let title, comment, shogo, emoji;
-        if (score <= 3) { title = "修行してきてください！"; comment = "八千代愛が足りないようです…。<br>土師ダムの桜を100回見て出直してきてください！"; shogo = "八千代ビギナー"; emoji = "🐍"; }
-        else if (score <= 6) { title = "なかなかの八千代通！"; comment = "よくわかってますね！<br>産直市場の常連さんレベルです！"; shogo = "八千代の賢者"; emoji = "🌸"; }
-        else { title = "完璧です！最高！！"; comment = "八千代町の未来はあなたに託されました。<br>もはや堂珍さんと肩を並べる存在！？"; shogo = "八千代神（ゴッド）"; emoji = "✨"; }
-        
-        ui.innerHTML = `
-            <h1 style="color:#ad1457;">${title}</h1>
-            <div style="text-align:center;">
-                <span class="shogo">${emoji}${shogo}${emoji}</span>
-                <p style="font-size: 1.5rem; font-weight:bold;">正解数: ${score} / 8</p>
-                <p style="font-size: 1.1rem; line-height:1.6; margin-bottom:20px;">${comment}</p>
-                <button onclick="location.reload()" style="width:100%; padding:15px; border-radius:12px; background:var(--primary-color); color:white; border:none; font-weight:bold; font-size:1.1rem; cursor:pointer;">もう一度あそぶ</button>
-            </div>
-        `;
-        if(score >= 5) confetti({ particleCount: 200, spread: 160, colors: ['#ffc0cb', '#ff69b4'] });
+        if (score <= 3) { title = "修行中！"; comment = "八千代愛を深めましょう！"; shogo = "八千代ビギナー"; emoji = "🐍"; }
+        else if (score <= 6) { title = "八千代通！"; comment = "素晴らしい知識です！"; shogo = "八千代の賢者"; emoji = "🌸"; }
+        else { title = "完璧です！"; comment = "あなたは八千代の守り神！"; shogo = "八千代神"; emoji = "✨"; }
+        ui.innerHTML = `<h1>${title}</h1><div style="text-align:center;"><span class="shogo">${emoji}${shogo}${emoji}</span><p>正解数: ${score} / 8</p><button onclick="location.reload()" style="width:100%; padding:15px; border-radius:12px; background:var(--primary-color); color:white; border:none; font-weight:bold;">もう一度あそぶ</button></div>`;
     }
     initQuiz();
 </script>
