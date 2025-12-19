@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>八千代神楽 響奏盤</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --shrine-red: #8b0000;
+            --gold: #d4af37;
+            --washi: #fdf5e6;
+            --future-blue: #003366;
+        }
+        body {
+            background-color: #222;
+            background-image: 
+                radial-gradient(circle at 100% 150%, var(--shrine-red) 24%, #4a0000 25%, #4a0000 28%, var(--shrine-red) 29%, var(--shrine-red) 36%, #4a0000 36%, #4a0000 40%, transparent 40%),
+                radial-gradient(circle at 0    150%, var(--shrine-red) 24%, #4a0000 25%, #4a0000 28%, var(--shrine-red) 29%, var(--shrine-red) 36%, #4a0000 36%, #4a0000 40%, transparent 40%),
+                linear-gradient(#4a0000, var(--shrine-red));
+            background-size: 100px 100px, 100px 100px, 100% 100%;
+            font-family: "Hiragino Mincho ProN", serif;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; margin: 0; padding: 20px 0;
+        }
+        .container {
+            background: var(--washi);
+            background-image: url("https://www.transparenttextures.com/patterns/p6.png");
+            border: 6px double var(--gold);
+            border-radius: 5px;
+            width: 85%; max-width: 400px; text-align: center;
+            padding: 30px 20px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            position: relative;
+        }
+        h1 { 
+            color: var(--shrine-red); font-size: 1.5rem; letter-spacing: 0.3rem; 
+            margin-bottom: 25px; border-bottom: 2px solid var(--shrine-red);
+            display: inline-block; padding: 0 10px 5px;
+        }
+        .board { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .inst-btn {
+            background: white; border: 2px solid var(--shrine-red); border-radius: 10px;
+            padding: 15px 5px; cursor: pointer; transition: 0.1s;
+            display: flex; flex-direction: column; align-items: center;
+            box-shadow: 3px 3px 0 rgba(139,0,0,0.2);
+        }
+        .inst-btn:active { background: var(--shrine-red); color: white; transform: translate(2px, 2px); box-shadow: none; }
+        .inst-icon { font-size: 2rem; margin-bottom: 3px; }
+        .inst-name { font-weight: bold; font-size: 0.9rem; }
+
+        .kakegoe-box { margin-top: 25px; display: flex; gap: 10px; justify-content: center; }
+        .voice-btn {
+            background: var(--shrine-red); color: var(--gold); border: 1px solid var(--gold);
+            padding: 8px 20px; font-weight: bold; cursor: pointer; font-size: 0.9rem;
+        }
+
+        /* 未来シミュレーターへのボタン */
+        .link-section {
+            margin-top: 35px; padding-top: 20px; border-top: 1px dashed var(--shrine-red);
+        }
+        .sim-btn {
+            display: block; background: var(--future-blue); color: white;
+            text-decoration: none; padding: 12px; border-radius: 30px;
+            font-weight: bold; font-size: 0.95rem; margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .sim-btn:hover { background: #004080; transform: scale(1.05); }
+        .back-link { color: #555; text-decoration: none; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>八千代神楽</h1>
+    
+    <div class="board">
+        <button class="inst-btn" onclick="play(100, 0.4, 'big')">
+            <span class="inst-icon">🥁</span><span class="inst-name">大太鼓</span>
+        </button>
+        <button class="inst-btn" onclick="play(250, 0.2, 'small')">
+            <span class="inst-icon">🥁</span><span class="inst-name">小太鼓</span>
+        </button>
+        <button class="inst-btn" onclick="play(2500, 0.1, 'metal')">
+            <span class="inst-icon">🔔</span><span class="inst-name">手打金</span>
+        </button>
+        <button class="inst-btn" onclick="play(800, 0.8, 'flute')">
+            <span class="inst-icon">🌬️</span><span class="inst-name">笛</span>
+        </button>
+    </div>
+
+    <div class="kakegoe-box">
+        <button class="voice-btn" onclick="voice('ヨッ！', 1.0)">ヨッ！</button>
+        <button class="voice-btn" onclick="voice('ハッ！', 1.2)">ハッ！</button>
+    </div>
+
+    <div class="link-section">
+        <a href="mirai.html" class="sim-btn">📈 未来シミュレーター</a>
+        <a href="index.html" class="back-link">◀ クイズに戻る</a>
+    </div>
+</div>
+
+<script>
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function play(freq, duration, type) {
+        const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+        osc.type = (type === 'metal') ? 'triangle' : 'sine';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        if (type === 'big') {
+            osc.frequency.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+            confetti({ particleCount: 15, spread: 60, origin: { y: 0.7 }, colors: ['#ffd700', '#ff0000'] });
+        } else if (type === 'flute') {
+            osc.frequency.linearRampToValueAtTime(freq + 100, audioCtx.currentTime + duration);
+        }
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + duration);
+    }
+    function voice(text, pitch) {
+        const uttr = new SpeechSynthesisUtterance(text);
+        uttr.lang = "ja-JP"; uttr.pitch = pitch; uttr.rate = 1.6;
+        window.speechSynthesis.speak(uttr);
+    }
+</script>
+</body>
+</html>
