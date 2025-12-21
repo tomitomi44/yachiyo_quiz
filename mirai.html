@@ -83,7 +83,7 @@
                 <span class="my-age-badge" id="badge20"></span>
             </div>
             <table>
-                <tr><th>現状のまま</th><th>対策したら</th></tr>
+                <tr><th>現状のまま</th><th>目指す未来</th></tr>
                 <tr>
                     <td><div class="val-box bad"><span class="item-name">人口</span><span class="item-val">2,400人</span></div></td>
                     <td><div class="val-box good"><span class="item-name">人口</span><span class="item-val">3,000人</span></div></td>
@@ -101,7 +101,7 @@
                 <span class="my-age-badge" id="badge50"></span>
             </div>
             <table>
-                <tr><th>現状のまま</th><th>対策したら</th></tr>
+                <tr><th>現状のまま</th><th>目指す未来</th></tr>
                 <tr>
                     <td><div class="val-box bad"><span class="item-name">人口</span><span class="item-val">1,300人</span></div></td>
                     <td><div class="val-box good"><span class="item-name">人口</span><span class="item-val">2,200人</span></div></td>
@@ -119,7 +119,7 @@
                 <span class="my-age-badge" id="badge80"></span>
             </div>
             <table>
-                <tr><th>現状のまま</th><th>対策したら</th></tr>
+                <tr><th>現状のまま</th><th>目指す未来</th></tr>
                 <tr>
                     <td><div class="val-box bad"><span class="item-name">人口</span><span class="item-val">880人</span></div></td>
                     <td><div class="val-box good"><span class="item-name">人口</span><span class="item-val">1,500人</span></div></td>
@@ -152,7 +152,7 @@
 
         document.getElementById('badge20').innerText = `${age20}歳`;
 
-        // 50年後のコメント（コメント部分だけ細字にする設定を追加）
+        // 50年後のコメント
         let comment50 = "";
         if (age50 >= 110) {
             comment50 = `<br><span style="font-size:0.7em; font-weight:normal;">（お空から応援中…🌥️）</span>`;
@@ -162,7 +162,7 @@
         document.getElementById('badge50').innerHTML = `${age50}歳${comment50}`;
 
 
-        // 80年後のコメント（コメント部分だけ細字にする設定を追加）
+        // 80年後のコメント
         let comment80 = "";
         if (age80 >= 110) {
             comment80 = `<br><span style="font-size:0.7em; font-weight:normal;">（お空から見守り中…😇）</span>`;
