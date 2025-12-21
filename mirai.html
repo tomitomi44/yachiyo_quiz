@@ -13,9 +13,9 @@
         /* 年齢選択エリア */
         .age-control-box { background: #f8fafc; padding: 25px 15px; border-radius: 20px; text-align: center; border: 1px solid #e2e8f0; margin-bottom: 20px; }
         
-        /* ▼▼▼ 修正：サイズを「6rem」に少し小さくしました ▼▼▼ */
+        /* 数字のサイズ調整 */
         .age-num-display { 
-            font-size: 6rem; /* 8rem → 6rem に変更 */
+            font-size: 6rem;
             font-weight: 900; 
             color: var(--main-blue); 
             line-height: 1;
@@ -116,7 +116,7 @@
         <div class="year-section">
             <div class="year-header">
                 <span class="year-title">約80年後 (2100年)</span>
-                <span class="my-age-badge" id="badge80" style="font-weight:normal;"></span>
+                <span class="my-age-badge" id="badge80"></span>
             </div>
             <table>
                 <tr><th>現状のまま</th><th>対策したら</th></tr>
@@ -152,24 +152,24 @@
 
         document.getElementById('badge20').innerText = `${age20}歳`;
 
-        // 50年後のコメント
+        // 50年後のコメント（コメント部分だけ細字にする設定を追加）
         let comment50 = "";
         if (age50 >= 110) {
-            comment50 = `<br><span style="font-size:0.7em">（お空から応援中…🌥️）</span>`;
+            comment50 = `<br><span style="font-size:0.7em; font-weight:normal;">（お空から応援中…🌥️）</span>`;
         } else if (age50 >= 100) {
-            comment50 = `<br><span style="font-size:0.7em">（祝100歳！超ご長寿✨）</span>`;
+            comment50 = `<br><span style="font-size:0.7em; font-weight:normal;">（祝100歳！超ご長寿✨）</span>`;
         }
         document.getElementById('badge50').innerHTML = `${age50}歳${comment50}`;
 
 
-        // 80年後のコメント
+        // 80年後のコメント（コメント部分だけ細字にする設定を追加）
         let comment80 = "";
         if (age80 >= 110) {
-            comment80 = `<br><span style="font-size:0.7em">（お空から見守り中…😇）</span>`;
+            comment80 = `<br><span style="font-size:0.7em; font-weight:normal;">（お空から見守り中…😇）</span>`;
         } else if (age80 >= 95) {
-            comment80 = `<br><span style="font-size:0.7em">（伝説の長老ですね！✨）</span>`;
+            comment80 = `<br><span style="font-size:0.7em; font-weight:normal;">（伝説の長老ですね！✨）</span>`;
         } else {
-            comment80 = `<br><span style="font-size:0.7em">（ひ孫に昔話をしよう👴）</span>`;
+            comment80 = `<br><span style="font-size:0.7em; font-weight:normal;">（ひ孫に昔話をしよう👴）</span>`;
         }
         document.getElementById('badge80').innerHTML = `${age80}歳${comment80}`;
         
