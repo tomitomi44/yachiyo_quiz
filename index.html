@@ -29,23 +29,6 @@
         .nav-btn { display: block; padding: 12px; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 0.9rem; transition: 0.3s; }
         .sim-link { background: #003366; color: white; }
         .kagura-link { background: #8b0000; color: #d4af37; border: 1px solid #d4af37; }
-        /* 年齢入力欄をデカくする */
-        #userAge {
-            font-size: 40px;      /* 文字サイズ */
-            padding: 10px;
-            width: 150px;         /* 横幅 */
-            text-align: center;
-            border: 3px solid #ff9f43;
-            border-radius: 15px;
-            font-weight: bold;
-        }
-
-        /* ボタンもデカくする */
-        #calcBtn {
-            font-size: 20px;
-            padding: 15px 30px;
-            border-radius: 50px;
-        }
     </style>
 </head>
 <body>
@@ -92,10 +75,11 @@
             q: "現在3,688人の八千代町。<br>2100年には最悪何人まで減る？<br><span style='font-size:0.7rem; color:#888; font-weight:normal;'>※出典：2020年 国勢調査</span>", 
             a: ["約2,000人", "約1,500人", "約880人"], 
             c: 2,
-            ok: "正解。3,688人が880人に…。なんと今の『1/4以下』になる計算です。（※出典：2020年 国勢調査）",
-            no: "実は880人。今の人口(3,688人)から考えると、1/4以下になってしまいます。（※出典：2020年 国勢調査）"
+            ok: "正解。3,688人が880人に…。なんと今の『1/4以下』になる計算です。（※2020年 国勢調査ベース）",
+            no: "実は880人。今の人口(3,688人)から考えると、1/4以下になってしまいます。（※2020年 国勢調査ベース）"
+        },
         { 
-            q: "2045年の目標人口は？", 
+            q: "2045年の目標人口は？<br><span style='font-size:0.7rem; color:#888; font-weight:normal;'>※安芸高田市 公表資料より</span>", 
             a: ["約1,000人", "約2,400人", "約3,000人"], 
             c: 2,
             ok: "正解！何もしないと2,400人ですが、目標は3,000人の維持です！",
@@ -120,7 +104,7 @@
             a: ["若者移住最大化", "子どもたちの未来を守る", "デジタル世界一"], 
             c: 1,
             ok: "完璧！すべては未来の子供たちのために。熱いですね！",
-            no: "正解は「子どもたちの未来を守る」。これが、まちづくりの一番の根っこです。"
+            no: "正解は「子どもたちの未来を守る」。これが、今のまちづくりの一番の根っこです。"
         }
     ];
 
@@ -129,7 +113,10 @@
     function initQuiz() {
         const q = quizData[currentQ];
         document.getElementById('progress').innerText = `第 ${currentQ + 1} 問 / 8 問`;
-        document.getElementById('q-text').innerText = q.q;
+        
+        // ★ここが大事な修正ポイント（改行を有効にする）★
+        document.getElementById('q-text').innerHTML = q.q;
+        
         const opts = document.getElementById('options'); opts.innerHTML = '';
         q.a.forEach((t, i) => {
             const b = document.createElement('button'); b.innerText = t; b.onclick = () => select(i); opts.appendChild(b);
@@ -174,7 +161,3 @@
 </script>
 </body>
 </html>
-
-
-
-
